@@ -8,8 +8,10 @@ def findTopToys(datasource, quantity, category, frame):
   quantity = int(float(quantity))
   data = pd.read_csv(datasource, delimiter=',')
   data = data.loc[data['amazon_category_and_sub_category'].str.contains(category, na=False)]
-  sorted_data = data.sort_values(['uniq_id', 'number_of_reviews'], ascending=[True, False])[0:quantity*10]
-  result = sorted_data.sort_values(['uniq_id', 'average_review_rating'], ascending=[True, False])[0:quantity]
+  sorted_data = data.sort_values(
+    ['uniq_id', 'number_of_reviews'], ascending=[True, False])[0:quantity*10]
+  result = sorted_data.sort_values(
+    ['uniq_id', 'average_review_rating'], ascending=[True, False])[0:quantity]
 
   renderTable(frame, result)
   return result
