@@ -103,7 +103,6 @@ def main():
   generate_csv = Button(root, text="Generate CSV", command=lambda : exportToCsv(findTopToys(datasource, quantity_input.get(), input_item_category.get(), frame), input_item_category.get(), quantity_input.get())).pack()
 
   mainloop()
-  # top_toys = findTopToys(datasource, 5, input_item_category.get())
 
 if __name__ == '__main__':
   main()
