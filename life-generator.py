@@ -36,7 +36,7 @@ def getCategories(datasource):
     unique_categories = list(set(stripped_categories))
     return list(filter(None, unique_categories))
 
-def getVariables(source):
+def getVariables(datasource):
   with open(source) as source:
     reader = csv.DictReader(source)
     data = {}
