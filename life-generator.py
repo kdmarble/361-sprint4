@@ -17,7 +17,7 @@ def findTopToys(datasource, quantity, category, frame):
 
   return result
 
-def getCategories(datasource):
+def readCsv(datasource):
   with open(datasource) as source:
     reader = csv.DictReader(source)
     data = {}
@@ -27,27 +27,22 @@ def getCategories(datasource):
           data[header].append(value)
         except KeyError:
           data[header] = [value]
+
+    return data
+
+def getCategories(datasource):
+  data = readCsv(datasource)
     
-    categories = data['amazon_category_and_sub_category']
-    stripped_categories = [] * len(categories)
-    for category in categories:
-      stripped_categories.append(category.split('>')[0].strip())
-    
-    unique_categories = list(set(stripped_categories))
-    return list(filter(None, unique_categories))
+  stripped_categories = []
+  for category in data['amazon_category_and_sub_category']:
+    stripped_categories.append(category.split('>')[0].strip())
+  
+  unique_categories = list(set(stripped_categories))
+  return list(filter(None, unique_categories))
 
 def getVariables(datasource):
-  with open(source) as source:
-    reader = csv.DictReader(source)
-    data = {}
-    for row in reader:
-      for header, value in row.items():
-        try:
-          data[header].append(value)
-        except KeyError:
-          data[header] = [value]
-    
-    return data['input_item_category'], data['input_number_to_generate']
+  data = readCsv(datasource)  
+  return data['input_item_category'], data['input_number_to_generate']
 
 def exportToCsv(top_toys, category, quantity):
   quantity = int(float(quantity))
