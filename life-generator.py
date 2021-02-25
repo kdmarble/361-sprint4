@@ -11,11 +11,13 @@ def findTopToys(datasource, quantity, category, frame):
   sorted_data = data.sort_values(['uniq_id', 'number_of_reviews'], ascending=[True, False])[0:quantity*10]
   result = sorted_data.sort_values(['uniq_id', 'average_review_rating'], ascending=[True, False])[0:quantity]
 
-  pt = Table(frame, dataframe=result)
+  renderTable(frame, result)
+  return result
+
+def renderTable(frame, data):
+  pt = Table(frame, dataframe=data)
   pt.show()
   pt.redraw()
-
-  return result
 
 def readCsv(datasource):
   with open(datasource) as source:
@@ -46,7 +48,9 @@ def getVariables(datasource):
 
 def exportToCsv(top_toys, category, quantity):
   quantity = int(float(quantity))
-  header = ['input_item_type', 'input_item_category', 'input_number_to_generate', 'output_item_name', 'output_item_rating', 'output_item_num_reviews']
+  header = [
+    'input_item_type', 'input_item_category', 'input_number_to_generate', 
+    'output_item_name', 'output_item_rating', 'output_item_num_reviews']
 
   with open('output.csv', mode='w') as output:
     output_writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -55,15 +59,15 @@ def exportToCsv(top_toys, category, quantity):
 
     if type(category) == list:
       top_toys['input_item_category'] = category[0]
-    else:
-      top_toys['input_item_category'] = category
-
-    if type(category) == list:
       top_toys['input_number_to_generate'] = quantity[0]
     else:
+      top_toys['input_item_category'] = category
       top_toys['input_number_to_generate'] = quantity
     
-    top_toys.to_csv(output, columns=['input_item_type', 'input_item_category', 'input_number_to_generate','product_name', 'average_review_rating', 'number_of_reviews'], header=False, index=False)
+    top_toys.to_csv(
+      output, 
+      columns=['input_item_type', 'input_item_category', 'input_number_to_generate',
+      'product_name', 'average_review_rating', 'number_of_reviews'], header=False, index=False)
 
 def main():
   datasource = "datasource.csv"
