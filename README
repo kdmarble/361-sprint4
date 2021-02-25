@@ -1,0 +1,3 @@
+Before running, be sure to have pandas and pandastable installed via these commands:
+pip3 install pandas
+pip3 install pandastable
