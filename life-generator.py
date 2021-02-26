@@ -1,4 +1,4 @@
-import sys, csv
+import sys, csv, os
 import pandas as pd
 from tkinter import *
 from tkinter import ttk
@@ -91,11 +91,24 @@ def buildGui(root, categories, datasource, frame):
     input_item_category.get(), frame), input_item_category.get(), quantity_input.get())
     ).pack()
   
+def request_data():
+  print("life-generator.py REQUESTING DATA FROM person-generator.py")
+  # run other service
+  os.system("python3 person-generator.py input2.csv")  # change this to match
+  lines = open('output2.csv').read().splitlines()  
+  # print the other service's data
+  print("data received:")
+  for i in lines:
+      print(i)
+  print("=========")
+
 def main():
+  if len(sys.argv) > 2:
+    request_data()
+
   datasource = "datasource.csv"
   input_item_type = "toys"
   categories = getCategories(datasource)
-  
   root = Tk()
   root.title("Life Generator")
   root.geometry("500x500")
