@@ -1,3 +1,12 @@
 Before running, be sure to have pandas and pandastable installed via these commands:
 pip3 install pandas
 pip3 install pandastable
+
+Program can be run with or without an input.csv file provided. 
+If you do use an input file, make sure it is in the same directory as life-generator.py file.
+You can use the provided input.csv in this repo as an example/sample source.
+To run without an input.csv, use the command: python3 life-generator.py
+To run with an input.csv, use the command: python3 life-generator.py input.csv
+
+The GUI will present you with the option to display results in the GUI, or to export the results
+as a csv file within the same directory, named as output.csv
