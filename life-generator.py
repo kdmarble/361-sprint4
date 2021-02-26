@@ -22,9 +22,9 @@ def renderTable(frame, data):
   pt.redraw()
 
 def readCsv(datasource):
+  data = {}
   with open(datasource) as source:
     reader = csv.DictReader(source)
-    data = {}
     for row in reader:
       for header, value in row.items():
         try:
@@ -32,7 +32,7 @@ def readCsv(datasource):
         except KeyError:
           data[header] = [value]
 
-    return data
+  return data
 
 def getCategories(datasource):
   data = readCsv(datasource)
@@ -49,7 +49,6 @@ def getVariables(datasource):
   return data['input_item_category'], data['input_number_to_generate']
 
 def exportToCsv(top_toys, category, quantity):
-  quantity = int(float(quantity))
   header = [
     'input_item_type', 'input_item_category', 'input_number_to_generate', 
     'output_item_name', 'output_item_rating', 'output_item_num_reviews']
@@ -64,14 +63,14 @@ def exportToCsv(top_toys, category, quantity):
       top_toys['input_number_to_generate'] = quantity[0]
     else:
       top_toys['input_item_category'] = category
-      top_toys['input_number_to_generate'] = quantity
+      top_toys['input_number_to_generate'] = int(float(quantity))
     
     top_toys.to_csv(
       output, 
       columns=['input_item_type', 'input_item_category', 'input_number_to_generate',
       'product_name', 'average_review_rating', 'number_of_reviews'], header=False, index=False)
 
-def buildGui(root, categories, datasource):
+def buildGui(root, categories, datasource, frame):
   Label(root, text="Choose a category").pack()
   input_item_category = StringVar(root)
   category_input = OptionMenu(root, input_item_category, *categories).pack()
@@ -91,24 +90,25 @@ def buildGui(root, categories, datasource):
     command=lambda : exportToCsv(findTopToys(datasource, quantity_input.get(), 
     input_item_category.get(), frame), input_item_category.get(), quantity_input.get())
     ).pack()
-
-  frame = Frame(root)
-  frame.pack(fill='both', expand=True)
   
 def main():
   datasource = "datasource.csv"
   input_item_type = "toys"
   categories = getCategories(datasource)
   
-  if len(sys.argv) > 1:
-    input_item_category, input_number_to_generate = getVariables(sys.argv[1])
-    top_toys = findTopToys(datasource, int(input_number_to_generate[0]), input_item_category[0])
-    exportToCsv(top_toys, input_item_category, input_number_to_generate)
-
   root = Tk()
   root.title("Life Generator")
   root.geometry("500x500")
-  buildGui(root, categories, datasource)
+  frame = Frame(root)
+  frame.pack(fill='both', expand=True)
+  buildGui(root, categories, datasource, frame)
+
+  if len(sys.argv) > 1:
+    input_item_category, input_number_to_generate = getVariables(sys.argv[1])
+    top_toys = findTopToys(
+      datasource, int(input_number_to_generate[0]), input_item_category[0], frame)
+    exportToCsv(top_toys, input_item_category, input_number_to_generate)
+  
   mainloop()
 
 if __name__ == '__main__':
